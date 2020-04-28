@@ -1,0 +1,16 @@
+sudo: required
+services:
+    - docker
+
+
+before_install:
+    - docker build -t p7bala/react-test -f ./client/Dockerfile.dev  ./client
+
+scripts:
+    - docker run -e CI=true p7bala/react-test npm run test
+
+after_success:
+    - docker build -t p7bala/multi-client ./client
+    - docker build -t p7bala/multi-nginx ./nginx
+    - docker build -t p7bala/multi-server ./server
+    - docker build -t p7bala/multi-work ./worker
